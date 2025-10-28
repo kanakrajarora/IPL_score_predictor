@@ -1,15 +1,26 @@
 import streamlit as st
-import pickle
 import numpy as np
-
+import requests
+import joblib
+from io import BytesIO
 import warnings
+
 warnings.filterwarnings("ignore", category=UserWarning)
 
+# -------------------------------
+# Load the trained model from Hugging Face
+# -------------------------------
+@st.cache_resource
+def load_model_from_hf():
+    url = "https://huggingface.co/kanakrajarora/random_forest_ipl_score/resolve/main/model.pkl"  # 🔹 replace filename if needed
+    #st.info("Downloading model from Hugging Face Hub... Please wait ⏳")
+    response = requests.get(url)
+    if response.status_code != 200:
+        st.error(f"❌ Failed to download model. Status code: {response.status_code}")
+        st.stop()
+    return joblib.load(BytesIO(response.content))
 
-# -------------------------------
-# Load the trained model
-# -------------------------------
-model = pickle.load(open('model.pkl', 'rb'))
+model = load_model_from_hf()
 
 # -------------------------------
 # Team mapping (2025 → old teams)
@@ -19,7 +30,6 @@ team_map = {
     'Punjab Kings': 'Kings XI Punjab',
     'Gujarat Titans': 'Sunrisers Hyderabad',   # Similar balance
     'Lucknow Super Giants': 'Rajasthan Royals',
-    # Keep original ones as-is
     'Chennai Super Kings': 'Chennai Super Kings',
     'Mumbai Indians': 'Mumbai Indians',
     'Kolkata Knight Riders': 'Kolkata Knight Riders',
@@ -34,7 +44,7 @@ teams = list(team_map.keys())
 # Streamlit App UI
 # -------------------------------
 st.title("🏏 IPL Score Predictor")
-st.markdown("### Predict First Innings Score based on Current Match Stats")
+st.markdown("### Predict the First Innings Final Score based on Live Match Stats")
 
 col1, col2 = st.columns(2)
 with col1:
@@ -93,13 +103,11 @@ if st.button('Predict Final Score'):
     # Convert to numpy array
     final_input = np.array([temp_array])
 
-    # Debug print (optional)
-    # st.write(f"Input feature count: {len(temp_array)}")
-
     # Predict
     prediction = int(model.predict(final_input)[0])
     lower_limit = prediction - 10
     upper_limit = prediction + 5
 
     st.success(f"🏏 Predicted Final Score Range: **{lower_limit} – {upper_limit}**")
+
 
