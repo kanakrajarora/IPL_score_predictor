@@ -1,4 +1,4 @@
- # IPL Score Predictor (2025)
+ # IPL Score Predictor
 
 A **Streamlit web app** that predicts the **final score of an IPL first innings** based on current match conditions. Built with **Random Forest Regression** and deployed on **Streamlit Cloud**.
 
@@ -7,7 +7,6 @@ A **Streamlit web app** that predicts the **final score of an IPL first innings*
 ## Features
 
 * Predicts first innings final score from mid-match stats
-* Supports updated **IPL 2025 teams** with internal mapping to historical teams
 * Real-time, interactive UI built using **Streamlit**
 * Model trained using **Random Forest Regressor** for highest accuracy
 * Backend model loaded from **Hugging Face** for efficient access
