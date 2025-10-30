@@ -105,8 +105,8 @@ if st.button('Predict Final Score'):
 
     # Predict
     prediction = int(model.predict(final_input)[0])
-    lower_limit = prediction - 10
-    upper_limit = prediction + 5
+    lower_limit = prediction - 2
+    upper_limit = prediction + 3
 
     st.success(f"🏏 Predicted Final Score Range: **{lower_limit} – {upper_limit}**")
 
